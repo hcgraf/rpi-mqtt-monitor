@@ -794,6 +794,8 @@ def publish_to_mqtt(monitored_values):
         if config.discovery_messages:
             client.publish(f"{config.mqtt_discovery_prefix}/sensor/{config.mqtt_topic_prefix}/{hostname}_data_sent/config",
                            config_json("data_sent"), qos=config.qos)
+        if config.use_availability:
+            client.publish(f"{config.mqtt_uns_structure}{config.mqtt_topic_prefix}/{hostname}/data_sent_availability", 'offline' if monitored_values["data_sent"] is None else 'online', qos=config.qos)
         client.publish(f"{config.mqtt_uns_structure}{config.mqtt_topic_prefix}/{hostname}/data_sent",
                        monitored_values["data_sent"], qos=config.qos, retain=config.retain)
 
@@ -801,6 +803,8 @@ def publish_to_mqtt(monitored_values):
         if config.discovery_messages:
             client.publish(f"{config.mqtt_discovery_prefix}/sensor/{config.mqtt_topic_prefix}/{hostname}_data_received/config",
                            config_json("data_received"), qos=config.qos)
+        if config.use_availability:
+            client.publish(f"{config.mqtt_uns_structure}{config.mqtt_topic_prefix}/{hostname}/data_received_availability", 'offline' if monitored_values["data_received"] is None else 'online', qos=config.qos)
         client.publish(f"{config.mqtt_uns_structure}{config.mqtt_topic_prefix}/{hostname}/data_received",
                        monitored_values["data_received"], qos=config.qos, retain=config.retain)
     
